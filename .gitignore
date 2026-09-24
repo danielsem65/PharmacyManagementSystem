@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# Local utility files (not part of the app)
+Invoice_Tracker.xlsx
+Invoice_Tracker_GUIDE.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,40 @@
+/// Permission catalog matching the server-side `permissions` table.
+/// Keep codes identical to `supabase/migrations/0001_init.sql`.
+abstract final class Permissions {
+  static const dashboardView = 'dashboard.view';
+  static const salesCreate = 'sales.create';
+  static const salesView = 'sales.view';
+  static const salesViewOwn = 'sales.view_own';
+  static const salesVoid = 'sales.void';
+  static const salesRefund = 'sales.refund';
+  static const invoiceView = 'invoice.view';
+  static const invoicePrint = 'invoice.print';
+  static const invoiceVoid = 'invoice.void';
+  static const productView = 'product.view';
+  static const productCreate = 'product.create';
+  static const productUpdate = 'product.update';
+  static const inventoryView = 'inventory.view';
+  static const inventoryAdjust = 'inventory.adjust';
+  static const inventoryReceive = 'inventory.receive';
+  static const inventoryTransfer = 'inventory.transfer';
+  static const supplierView = 'supplier.view';
+  static const supplierManage = 'supplier.manage';
+  static const purchaseView = 'purchase.view';
+  static const purchaseCreate = 'purchase.create';
+  static const purchaseReceive = 'purchase.receive';
+  static const customerView = 'customer.view';
+  static const customerManage = 'customer.manage';
+  static const expenseView = 'expense.view';
+  static const expenseCreate = 'expense.create';
+  static const expenseManage = 'expense.manage';
+  static const employeeView = 'employee.view';
+  static const employeeManage = 'employee.manage';
+  static const attendanceSelf = 'attendance.self';
+  static const attendanceManage = 'attendance.manage';
+  static const reportView = 'report.view';
+  static const reportFinancial = 'report.financial';
+  static const settingsManage = 'settings.manage';
+  static const auditView = 'audit.view';
+  static const notificationView = 'notification.view';
+  static const usersManage = 'users.manage';
+}

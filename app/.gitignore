@@ -1,0 +1,25 @@
+// Dart SDK
+/.dart_tool/
+.dart_tool/
+.dart_tool/**
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+
+# IDE
+.idea/
+*.swp
+.vscode/
+android/.gradle/
+android/local.properties
+
+# Generated
+coverage/
+doc/api/
+
+# Logs
+*.log

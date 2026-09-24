@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  FLUTTER_CHANNEL: stable
+
+jobs:
+  db-schema:
+    name: Validate database schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start Postgres
+        run: |
+          docker run -d --name pg \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_DB=pharmacy \
+            -p 5432:5432 \
+            postgres:15-alpine
+          for i in $(seq 1 30); do
+            if docker exec pg pg_isready -U postgres -d pharmacy -h localhost; then break; fi
+            sleep 2
+          done
+
+      - name: Create Supabase-compatible auth schema + roles
+        run: |
+          docker exec pg psql -U postgres -d pharmacy -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE anon NOLOGIN;
+          CREATE ROLE authenticated NOLOGIN;
+          CREATE SCHEMA auth;
+          CREATE TABLE auth.users (
+            id uuid PRIMARY KEY,
+            email text,
+            raw_user_meta_data jsonb,
+            created_at timestamptz DEFAULT now()
+          );
+          CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT NULL::uuid $$;
+          GRANT USAGE ON SCHEMA public TO anon, authenticated;
+          SQL
+
+      - name: Apply migrations
+        run: |
+          for f in supabase/migrations/*.sql; do
+            echo "Applying $f"
+            docker exec -i pg psql -U postgres -d pharmacy -v ON_ERROR_STOP=1 < "$f"
+          done
+
+      - name: Apply seed data
+        run: |
+          docker exec -i pg psql -U postgres -d pharmacy -v ON_ERROR_STOP=1 < supabase/seed.sql
+
+  flutter-analyze-test:
+    name: Flutter analyze + test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Generate platform scaffolding
+        run: flutter create --platforms=web --no-overwrite . --org com.pharmacy --project-name pharmacy_app
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - run: flutter build web --no-tree-shake-icons
+
+  flutter-build-apk:
+    name: Flutter build APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Generate platform scaffolding
+        run: flutter create --platforms=android --no-overwrite . --org com.pharmacy --project-name pharmacy_app
+      - run: flutter build apk --debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pharmacy-app-debug
+          path: app/build/app/outputs/flutter-apk/*.apk

@@ -1,0 +1,1380 @@
+PHARMACY MANAGEMENT SYSTEM — MASTER DEVELOPMENT PROMPT
+
+You are the lead software architect and senior full-stack engineer responsible for building a professional, production-ready Pharmacy Management System.
+
+The system will be used by a real pharmacy and must be designed for reliability, security, scalability, excellent UX, and future expansion to multiple branches.
+
+Do NOT build a simple demo, prototype, or generic shop POS.
+
+Build this as a serious commercial pharmacy management platform.
+
+---
+
+1. FIRST: ANALYZE THE PROJECT
+
+Before writing substantial code:
+
+1. Inspect the entire existing project.
+2. Identify the current framework, language, database, architecture, dependencies, and conventions.
+3. Inspect all existing screens/components/services.
+4. Do not unnecessarily replace working code.
+5. Identify missing architecture and create a clean implementation plan.
+6. Create/update documentation explaining the architecture.
+7. Break implementation into logical phases.
+8. Implement phase-by-phase and verify each phase before moving forward.
+
+If the project is empty, establish a professional architecture from scratch.
+
+Do not ask unnecessary questions when a reasonable engineering decision can be made.
+
+---
+
+2. PRODUCT
+
+Name:
+
+PHARMACY MANAGEMENT SYSTEM
+
+Purpose:
+
+Manage all major operations of a modern pharmacy:
+
+- Point of Sale
+- Sales
+- Invoices
+- Receipts
+- Customers
+- Medicines/products
+- Inventory
+- Batch tracking
+- Expiry tracking
+- Suppliers
+- Purchases
+- Employees
+- Attendance
+- Expenses
+- Payments
+- Reports
+- Profit tracking
+- Audit logs
+- User permissions
+- Dashboard
+- Notifications
+- Settings
+
+The system must be designed so that it can later support multiple pharmacy branches.
+
+---
+
+3. CORE PRINCIPLES
+
+Prioritize:
+
+- Correct financial calculations
+- Inventory accuracy
+- Security
+- Auditability
+- Role-based permissions
+- Clean UI
+- Fast POS workflow
+- Reliable database transactions
+- Good error handling
+- Data validation
+- Scalability
+- Maintainability
+
+Never silently lose data.
+
+Never allow inventory quantities to become inconsistent with sales.
+
+Never trust values calculated only on the client.
+
+Important calculations must be validated server-side/database-side.
+
+---
+
+4. USER ROLES
+
+Implement role-based access control.
+
+Roles:
+
+OWNER / SUPER ADMIN
+
+Full access.
+
+Can:
+
+- Manage pharmacy
+- Manage users
+- Manage permissions
+- Manage products
+- Manage inventory
+- Manage suppliers
+- Manage purchases
+- View sales
+- View invoices
+- Manage expenses
+- View reports
+- View profits
+- View attendance
+- View audit logs
+- Configure settings
+
+MANAGER
+
+Operational management access.
+
+Can:
+
+- View dashboard
+- Manage inventory
+- Manage products
+- Manage suppliers
+- Manage purchases
+- View sales
+- View reports
+- Manage employees where permitted
+
+PHARMACIST
+
+Can:
+
+- Process sales
+- Manage customers
+- View products
+- View inventory
+- Handle pharmacy-specific workflows
+- View relevant sales/invoices
+
+CASHIER
+
+Can:
+
+- POS
+- Sales
+- Customers
+- Print receipts
+- View own transactions
+- Process permitted refunds according to permissions
+
+Cannot:
+
+- Modify product prices without permission
+- Delete transactions
+- Modify inventory directly
+- Access sensitive financial reports
+
+INVENTORY MANAGER
+
+Can:
+
+- Products
+- Stock
+- Stock adjustments
+- Suppliers
+- Purchases
+- Batch management
+- Expiry management
+
+STAFF
+
+Restricted access based on assigned permissions.
+
+Design the permission system so permissions can later be customized per user.
+
+---
+
+5. DASHBOARD
+
+Create a professional pharmacy dashboard.
+
+Display:
+
+- Today's sales
+- Today's transactions
+- Today's profit
+- Today's expenses
+- Net result
+- Cash sales
+- Mobile Money sales
+- Card sales
+- Credit sales
+- Outstanding balances
+- Low-stock products
+- Expiring products
+- Expired products
+- Recent transactions
+- Top-selling products
+- Sales by staff
+
+Charts:
+
+- Sales over time
+- Revenue vs expenses
+- Payment methods
+- Top products
+
+Allow:
+
+- Today
+- Yesterday
+- Last 7 days
+- Last 30 days
+- This month
+- Custom date range
+
+Dashboard data must respect user permissions.
+
+---
+
+6. POINT OF SALE
+
+Build an extremely fast POS interface.
+
+Features:
+
+- Search products
+- Barcode scanner
+- Product categories
+- Product suggestions
+- Add to cart
+- Remove item
+- Change quantity
+- Discounts
+- Customer selection
+- Walk-in customer
+- Payment method
+- Amount received
+- Change calculation
+- Complete sale
+- Print receipt
+- Generate invoice
+- Hold sale
+- Resume sale
+- Cancel sale according to permissions
+
+Payment methods:
+
+- Cash
+- Mobile Money
+- Card
+- Bank
+- Credit
+- Other configurable methods
+
+POS should show:
+
+Product
+Quantity
+Unit Price
+Discount
+Subtotal
+Total
+
+Before completing a sale:
+
+Validate:
+
+- Product exists
+- Product is active
+- Quantity is available
+- Product is not expired
+- Required batch information exists
+- Price is valid
+- Customer information where required
+- Payment amount is valid
+
+---
+
+7. INVENTORY
+
+Inventory must be pharmacy-focused.
+
+Product fields:
+
+- Product ID
+- SKU
+- Barcode
+- Product name
+- Generic name
+- Brand
+- Category
+- Description
+- Dosage/form
+- Strength
+- Unit
+- Pack size
+- Purchase price
+- Selling price
+- Wholesale price
+- Minimum stock level
+- Reorder level
+- Supplier
+- Active/inactive status
+
+Track:
+
+- Current quantity
+- Reserved quantity
+- Available quantity
+- Stock value
+
+---
+
+8. BATCH MANAGEMENT
+
+Every applicable medicine must support batches.
+
+Batch fields:
+
+- Batch ID
+- Product ID
+- Batch number
+- Purchase date
+- Manufacturing date
+- Expiry date
+- Quantity received
+- Quantity remaining
+- Purchase price
+- Supplier
+
+Never treat all stock of a medicine as one anonymous quantity when batch tracking is enabled.
+
+---
+
+9. EXPIRY MANAGEMENT
+
+Create:
+
+Expired
+
+Products already expired.
+
+Expiring Soon
+
+Configurable threshold, for example:
+
+30 days
+60 days
+90 days
+
+Provide:
+
+- Dashboard warnings
+- Inventory filters
+- Reports
+- Notifications
+
+Prevent sale of expired products.
+
+Support stock disposal/write-off with mandatory reason and audit trail.
+
+---
+
+10. FEFO
+
+Implement:
+
+FIRST EXPIRY, FIRST OUT.
+
+When selling a medicine with multiple batches:
+
+Automatically prioritize the batch with the earliest valid expiry date.
+
+Example:
+
+Paracetamol:
+
+Batch A → expires March → 20 units
+
+Batch B → expires August → 50 units
+
+If customer buys 10:
+
+Deduct from Batch A.
+
+If quantity exceeds Batch A:
+
+Continue into Batch B.
+
+---
+
+11. STOCK MOVEMENT
+
+Every inventory change must create a stock movement record.
+
+Movement types:
+
+- Purchase
+- Sale
+- Return
+- Adjustment
+- Damage
+- Expired
+- Disposal
+- Transfer
+- Correction
+
+Record:
+
+- Product
+- Batch
+- Quantity
+- Previous quantity
+- New quantity
+- Movement type
+- User
+- Date/time
+- Reason
+- Reference transaction
+
+Inventory must be auditable.
+
+---
+
+12. PURCHASES
+
+Create supplier purchase workflow.
+
+Purchase order:
+
+- Supplier
+- Date
+- Products
+- Quantity
+- Unit cost
+- Discount
+- Tax if applicable
+- Total
+- Status
+
+Statuses:
+
+- Draft
+- Ordered
+- Partially received
+- Received
+- Cancelled
+
+Receiving stock must update inventory atomically.
+
+If batch tracking is enabled, receiving stock must capture:
+
+- Batch number
+- Expiry date
+- Quantity
+- Cost
+
+---
+
+13. SUPPLIERS
+
+Supplier profile:
+
+- Supplier name
+- Company
+- Phone
+- Email
+- Address
+- Contact person
+- Tax/business information if applicable
+- Notes
+
+Track:
+
+- Purchase history
+- Amount purchased
+- Outstanding balances
+- Payments
+
+---
+
+14. CUSTOMERS
+
+Customer profile:
+
+- Customer ID
+- Full name
+- Phone
+- Email
+- Address
+- Date registered
+- Notes
+
+Customer page:
+
+- Purchase history
+- Invoices
+- Payments
+- Outstanding credit
+- Total spending
+
+Support:
+
+WALK-IN CUSTOMER
+
+without requiring account creation.
+
+---
+
+15. INVOICES
+
+Every completed sale must generate a unique invoice number.
+
+Example:
+
+INV-2026-000001
+
+Invoice contains:
+
+- Pharmacy logo
+- Pharmacy name
+- Address
+- Contact
+- Invoice number
+- Date/time
+- Customer
+- Products
+- Quantity
+- Unit price
+- Discount
+- Total
+- Payment method
+- Amount paid
+- Balance
+- Served by
+
+Actions:
+
+- View
+- Print
+- Download PDF
+- Reprint
+- Search
+- Filter
+- Refund according to permissions
+
+Never physically delete completed invoices.
+
+Use cancellation/void mechanisms with audit records.
+
+---
+
+16. RECEIPTS
+
+Create a thermal receipt layout.
+
+Receipt should contain:
+
+- Pharmacy name
+- Address
+- Contact
+- Receipt/invoice number
+- Date/time
+- Cashier
+- Customer
+- Items
+- Quantity
+- Prices
+- Total
+- Payment method
+- Amount received
+- Change
+- Thank-you message
+
+Support configurable receipt size.
+
+---
+
+17. RETURNS / REFUNDS
+
+Implement a controlled return system.
+
+A return must reference the original sale.
+
+Record:
+
+- Original invoice
+- Product
+- Batch
+- Quantity
+- Reason
+- Refund amount
+- Staff member
+- Date/time
+
+Inventory must be updated correctly.
+
+Do not allow arbitrary refund amounts without appropriate permissions.
+
+---
+
+18. EXPENSES
+
+Create expense management.
+
+Fields:
+
+- Expense ID
+- Category
+- Description
+- Amount
+- Payment method
+- Date
+- Recorded by
+- Attachment/receipt
+- Notes
+
+Categories:
+
+- Rent
+- Electricity
+- Water
+- Internet
+- Salaries
+- Transport
+- Maintenance
+- Supplies
+- Marketing
+- Other
+
+Allow custom categories.
+
+---
+
+19. EMPLOYEE MANAGEMENT
+
+Employee profile:
+
+- Name
+- Employee ID
+- Phone
+- Email
+- Position
+- Role
+- Status
+- Date joined
+
+Track:
+
+- Sales
+- Transactions
+- Attendance
+- Activity
+- Login history where available
+
+---
+
+20. ATTENDANCE / CHECK-IN
+
+Workers must be able to:
+
+CHECK IN
+
+and
+
+CHECK OUT.
+
+Record:
+
+- Employee
+- Date
+- Check-in time
+- Check-out time
+- Duration
+- Status
+- Optional notes
+
+Prevent duplicate active check-ins.
+
+Show attendance dashboard.
+
+---
+
+21. AUDIT LOG
+
+This is critical.
+
+Record important actions:
+
+- Login
+- Logout
+- Product creation
+- Product update
+- Price change
+- Stock adjustment
+- Purchase
+- Sale
+- Refund
+- Invoice cancellation
+- User creation
+- Permission change
+- Expense creation
+- Settings changes
+
+Record:
+
+- User
+- Action
+- Entity
+- Entity ID
+- Before value where appropriate
+- After value where appropriate
+- Timestamp
+- Metadata
+
+Audit logs should not be editable by normal users.
+
+---
+
+22. REPORTS
+
+Create professional reports.
+
+Sales Report
+
+- Date
+- Invoice
+- Customer
+- Staff
+- Total
+- Payment method
+
+Product Sales
+
+- Product
+- Quantity sold
+- Revenue
+- Cost
+- Gross profit
+
+Profit Report
+
+Revenue
+minus Cost of Goods Sold
+equals Gross Profit
+
+Gross Profit
+minus Expenses
+equals Net Result
+
+Make the calculation methodology explicit in the UI.
+
+Inventory Report
+
+- Product
+- Quantity
+- Cost value
+- Selling value
+- Potential margin
+
+Expiry Report
+
+- Product
+- Batch
+- Quantity
+- Expiry date
+- Days remaining
+
+Staff Report
+
+- Employee
+- Sales
+- Transactions
+- Revenue
+
+Expense Report
+
+- Category
+- Amount
+- Date
+- Staff
+
+All reports support:
+
+- Date filters
+- Search
+- Sorting
+- Pagination
+- Export CSV
+- Export PDF where appropriate
+- Print
+
+---
+
+23. SEARCH
+
+Global search should support:
+
+- Product name
+- Generic name
+- Barcode
+- SKU
+- Invoice number
+- Customer name
+- Customer phone
+- Supplier
+- Employee
+
+Search should be fast.
+
+Use indexed database fields.
+
+---
+
+24. NOTIFICATIONS
+
+Create notification system for:
+
+- Low stock
+- Expiring products
+- Expired products
+- Pending purchases
+- Outstanding customer balances
+- Important system events
+
+Allow configurable thresholds.
+
+---
+
+25. SETTINGS
+
+Settings should include:
+
+Pharmacy
+
+- Name
+- Logo
+- Address
+- Phone
+- Email
+- Business information
+
+Invoice
+
+- Invoice prefix
+- Number format
+- Footer
+- Logo
+- Tax configuration if applicable
+
+Inventory
+
+- Low stock threshold
+- Expiry warning threshold
+- FEFO enable/disable
+- Negative stock prevention
+
+Payments
+
+Configurable payment methods.
+
+Users
+
+Roles and permissions.
+
+System
+
+- Currency
+- Timezone
+- Date format
+- Backup settings
+
+Default currency:
+
+GHS / GH₵
+
+Default timezone:
+
+Africa/Accra
+
+---
+
+26. DATABASE REQUIREMENTS
+
+Use a properly normalized relational database.
+
+At minimum consider tables/entities:
+
+users
+roles
+permissions
+user_roles
+role_permissions
+employees
+attendance
+customers
+suppliers
+categories
+products
+product_batches
+inventory
+stock_movements
+purchases
+purchase_items
+sales
+sale_items
+payments
+invoices
+invoice_items
+returns
+return_items
+expenses
+expense_categories
+notifications
+audit_logs
+pharmacy_settings
+
+Add supporting tables when architecturally necessary.
+
+Use:
+
+- UUIDs where appropriate
+- Foreign keys
+- Unique constraints
+- Indexes
+- Created timestamps
+- Updated timestamps
+- Soft deletion where appropriate
+
+Never use floating-point arithmetic for monetary values.
+
+Use appropriate decimal/numeric types for money.
+
+---
+
+27. DATABASE TRANSACTIONS
+
+Sales must be atomic.
+
+When a sale completes:
+
+1. Create sale.
+2. Create sale items.
+3. Determine correct batch(es).
+4. Deduct inventory.
+5. Create stock movement records.
+6. Create payment record.
+7. Create invoice.
+8. Commit transaction.
+
+If any step fails:
+
+ROLL BACK THE ENTIRE TRANSACTION.
+
+Do not create half-completed sales.
+
+Apply the same principle to:
+
+- Purchases
+- Returns
+- Refunds
+- Stock adjustments
+
+---
+
+28. SECURITY
+
+Implement:
+
+- Authentication
+- Authorization
+- Role-based access
+- Secure password handling
+- Session management
+- Input validation
+- Server-side authorization
+- Rate limiting where appropriate
+- Audit logs
+- Secure database policies
+- Protection against SQL injection
+- Protection against XSS
+- Protection against unauthorized data access
+
+Never expose sensitive credentials in frontend code.
+
+Never put service-role/admin database keys in client applications.
+
+---
+
+29. UI/UX
+
+Design a modern professional pharmacy interface.
+
+Style:
+
+- Clean
+- Medical/professional
+- Minimal
+- Fast
+- Responsive
+- Easy to understand
+
+Desktop should prioritize:
+
+- Sidebar navigation
+- Dashboard
+- POS workspace
+- Data tables
+
+Mobile should prioritize:
+
+- Responsive layouts
+- Touch-friendly controls
+- Quick actions
+
+Use consistent:
+
+- Typography
+- Spacing
+- Buttons
+- Forms
+- Tables
+- Modals
+- Alerts
+- Loading states
+- Empty states
+- Error states
+
+Do not create unnecessary visual complexity.
+
+---
+
+30. POS PERFORMANCE
+
+The cashier must be able to complete a normal sale quickly.
+
+Optimize:
+
+- Product search
+- Barcode lookup
+- Cart updates
+- Customer lookup
+- Payment completion
+- Receipt generation
+
+Avoid unnecessary page reloads.
+
+---
+
+31. OFFLINE-FIRST / FUTURE READY
+
+Architect the system so offline POS can be added.
+
+If implementing offline mode now is practical, support:
+
+- Local transaction queue
+- Local inventory cache
+- Offline sales
+- Sync when internet returns
+- Conflict handling
+
+If not implementing it in V1, ensure the architecture does not prevent it later.
+
+---
+
+32. MULTI-BRANCH READY
+
+Even if the pharmacy currently has one branch, structure the database so branches can be added later.
+
+Future model:
+
+Organization
+↓
+Branches
+↓
+Users
+↓
+Inventory
+↓
+Sales
+
+Avoid hardcoding the system around a single physical location.
+
+---
+
+33. BACKUPS
+
+Design for regular backups.
+
+Provide:
+
+- Database backup strategy
+- Export functionality
+- Restore documentation
+- Error recovery
+
+Never assume cloud storage alone is a backup strategy.
+
+---
+
+34. ERROR HANDLING
+
+Every important operation must handle:
+
+- Network failure
+- Database failure
+- Validation failure
+- Permission failure
+- Duplicate requests
+- Missing records
+- Insufficient stock
+- Expired product
+- Invalid payment
+
+Show users understandable messages.
+
+Do not expose raw stack traces to users.
+
+Log technical errors appropriately.
+
+---
+
+35. DATA INTEGRITY RULES
+
+Examples:
+
+A product cannot have negative inventory.
+
+An expired medicine cannot be sold.
+
+A completed invoice cannot simply be deleted.
+
+A completed sale cannot disappear from reports.
+
+A stock adjustment must have a reason.
+
+A refund must reference a sale.
+
+A purchase receipt must update stock.
+
+A worker cannot have two active check-ins.
+
+Unauthorized users cannot access restricted financial reports.
+
+---
+
+36. DEVELOPMENT WORKFLOW
+
+Use this sequence:
+
+PHASE 1
+Architecture + database
+
+PHASE 2
+Authentication + roles
+
+PHASE 3
+Products + inventory
+
+PHASE 4
+POS + sales
+
+PHASE 5
+Invoices + printing
+
+PHASE 6
+Customers + suppliers
+
+PHASE 7
+Purchases + stock receiving
+
+PHASE 8
+Employees + attendance
+
+PHASE 9
+Expenses
+
+PHASE 10
+Reports + dashboard
+
+PHASE 11
+Audit logs + notifications
+
+PHASE 12
+Security hardening
+
+PHASE 13
+Testing
+
+PHASE 14
+Production preparation
+
+Do not attempt to build everything as one giant uncontrolled change.
+
+---
+
+37. TESTING
+
+Create automated tests for critical business logic.
+
+At minimum test:
+
+- Product creation
+- Stock receiving
+- Stock deduction
+- FEFO
+- Expiry prevention
+- Sales
+- Discounts
+- Payments
+- Refunds
+- Invoice generation
+- Profit calculation
+- Permissions
+- Attendance
+- Audit logs
+
+Test edge cases.
+
+Example:
+
+Product has 2 units remaining and cashier tries to sell 3.
+
+Expected:
+
+SALE REJECTED.
+
+Do not allow inventory to become -1.
+
+---
+
+38. SEED DATA
+
+Create development/demo seed data:
+
+- Sample products
+- Sample categories
+- Sample customers
+- Sample suppliers
+- Sample employees
+- Sample sales
+- Sample purchases
+- Sample expenses
+
+Do not use fake data in production.
+
+---
+
+39. DOCUMENTATION
+
+Create documentation for:
+
+- Architecture
+- Database
+- Environment variables
+- Installation
+- Development
+- Production deployment
+- User roles
+- Permissions
+- Database migrations
+- Backup/restore
+- Printer setup
+- Barcode scanner setup
+
+---
+
+40. IMPORTANT ENGINEERING RULE
+
+Do not blindly follow this specification if the existing project has a better established architecture.
+
+Inspect first.
+
+Reuse existing working components where appropriate.
+
+Avoid unnecessary rewrites.
+
+Keep code modular.
+
+Keep business logic separated from UI.
+
+Keep database operations organized.
+
+Use reusable components.
+
+Use strong typing where supported.
+
+---
+
+41. QUALITY STANDARD
+
+The final application should feel like software a real pharmacy could pay for and use every day.
+
+It should NOT feel like:
+
+- A student project
+- A CRUD demo
+- A template
+- A basic inventory app
+- A generic supermarket POS
+
+It should feel like a professional pharmacy ERP/POS platform.
+
+---
+
+42. FINAL ACCEPTANCE CHECK
+
+Before declaring the project complete, verify:
+
+[ ] Authentication works
+[ ] Roles work
+[ ] Permissions work
+[ ] Products work
+[ ] Inventory works
+[ ] Batch tracking works
+[ ] Expiry tracking works
+[ ] FEFO works
+[ ] POS works
+[ ] Sales work
+[ ] Payments work
+[ ] Invoices work
+[ ] Receipt printing works
+[ ] Customers work
+[ ] Suppliers work
+[ ] Purchases work
+[ ] Returns work
+[ ] Expenses work
+[ ] Employee management works
+[ ] Check-in/check-out works
+[ ] Reports work
+[ ] Dashboard works
+[ ] Notifications work
+[ ] Audit logs work
+[ ] Search works
+[ ] Database constraints work
+[ ] Security policies work
+[ ] Error handling works
+[ ] Critical tests pass
+[ ] Production build succeeds
+[ ] No major console/runtime errors remain
+
+---
+
+YOUR FIRST TASK
+
+Do NOT immediately start generating random UI.
+
+First:
+
+1. Inspect the project.
+2. Determine the existing stack.
+3. Analyze the current architecture.
+4. Identify what already exists.
+5. Propose the implementation architecture.
+6. Propose the database schema.
+7. Identify dependencies/packages required.
+8. Create a phased implementation plan.
+9. Then begin Phase 1.
+
+After each major phase:
+
+- Run tests.
+- Check for errors.
+- Fix issues.
+- Verify database integrity.
+- Verify UI behavior.
+- Continue to the next phase.
+
+Build this carefully as a production application.
