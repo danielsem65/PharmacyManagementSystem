@@ -696,9 +696,9 @@ as $$
     where pr.id = auth.uid()
   )
   select jsonb_build_object(
-    'profile', (select to_jsonb(*) from me),
+    'profile', (select to_jsonb(me) from me),
     'permissions', (select codes from perms),
-    'settings', (select to_jsonb(*) from settings)
+    'settings', (select to_jsonb(settings) from settings)
   );
 $$;
 

@@ -38,6 +38,7 @@ void main() {
 
   testWidgets('HomeShell only shows permission-gated navigation items', (tester) async {
     await tester.pumpWidget(buildApp());
+    await tester.pump();
 
     expect(find.text('Dashboard'), findsWidgets);
     expect(find.text('Point of Sale'), findsWidgets);
