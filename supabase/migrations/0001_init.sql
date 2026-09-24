@@ -8,6 +8,41 @@ create extension if not exists pgcrypto;
 create extension if not exists pg_trgm;
 
 -- ------------------------------------------------------------
+-- Supabase-compatible auth bootstrap (CI / fresh-db friendly)
+-- On a real Supabase project the `auth` schema, `auth.users` table,
+-- `auth.uid()` and the `anon`/`authenticated` roles already exist,
+-- so every guard below is a no-op and production behaviour is
+-- unchanged.
+-- ------------------------------------------------------------
+do $auth_boot$
+begin
+  if not exists (select from pg_roles where rolname = 'authenticated') then
+    create role authenticated nologin;
+  end if;
+  if not exists (select from pg_roles where rolname = 'anon') then
+    create role anon nologin;
+  end if;
+end;
+$auth_boot$;
+
+do $auth_boot$
+begin
+  if not exists (select 1 from pg_namespace where nspname = 'auth') then
+    create schema auth;
+    create table auth.users (
+      id uuid primary key,
+      email text,
+      raw_user_meta_data jsonb,
+      created_at timestamptz default now()
+    );
+    create or replace function auth.uid() returns uuid
+      language sql stable
+      as $auth_uid$ select null::uuid $auth_uid$;
+  end if;
+end;
+$auth_boot$;
+
+-- ------------------------------------------------------------
 -- Updated-at helper
 -- ------------------------------------------------------------
 create or replace function public.set_updated_at()
@@ -106,8 +141,10 @@ $$;
 
 do $$
 begin
-  if exists (select 1 from pg_namespace where nspname = 'auth') then
-    create or replace trigger on_auth_user_created
+  if exists (select 1 from pg_namespace where nspname = 'auth')
+     and not exists (select 1 from pg_trigger where tgname = 'on_auth_user_created')
+  then
+    create trigger on_auth_user_created
       after insert on auth.users
       for each row execute function public.handle_new_user();
   end if;

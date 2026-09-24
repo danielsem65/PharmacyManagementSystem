@@ -27,22 +27,6 @@ jobs:
             sleep 2
           done
 
-      - name: Create Supabase-compatible auth schema + roles
-        run: |
-          docker exec pg psql -U postgres -d pharmacy -v ON_ERROR_STOP=1 <<'SQL'
-          CREATE ROLE anon NOLOGIN;
-          CREATE ROLE authenticated NOLOGIN;
-          CREATE SCHEMA auth;
-          CREATE TABLE auth.users (
-            id uuid PRIMARY KEY,
-            email text,
-            raw_user_meta_data jsonb,
-            created_at timestamptz DEFAULT now()
-          );
-          CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT NULL::uuid $$;
-          GRANT USAGE ON SCHEMA public TO anon, authenticated;
-          SQL
-
       - name: Apply migrations
         run: |
           for f in supabase/migrations/*.sql; do

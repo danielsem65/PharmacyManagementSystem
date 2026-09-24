@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 /// Professional medical/pharmacy design system.
 abstract final class AppTheme {
   static const Color _primary = Color(0xFF0E7490);
-  static const Color _secondary = Color(0xFF2F855A);
   static const Color _error = Color(0xFFC53030);
 
   static ThemeData get light => _base(Brightness.light);
@@ -31,9 +30,11 @@ abstract final class AppTheme {
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.5)),
+        ),
         color: isDark ? const Color(0xFF1D2226) : Colors.white,
-        border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
