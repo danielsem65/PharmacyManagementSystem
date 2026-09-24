@@ -77,3 +77,27 @@ jobs:
         with:
           name: pharmacy-app-debug
           path: app/build/app/outputs/flutter-apk/*.apk
+
+  flutter-build-windows:
+    name: Flutter build Windows (PC)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Generate platform scaffolding
+        run: flutter create --platforms=windows --no-overwrite . --org com.pharmacy --project-name pharmacy_app
+      - run: flutter build windows --release
+      - name: Package desktop bundle
+        shell: pwsh
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath pharmacy-desktop.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pharmacy-desktop-windows
+          path: app/pharmacy-desktop.zip

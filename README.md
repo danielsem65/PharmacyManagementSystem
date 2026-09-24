@@ -12,7 +12,7 @@ and settings — multi-branch ready.
 - **Backend:** Supabase (PostgreSQL 15+, Auth, RLS security)
 - **Money:** `numeric(14,2)` in Postgres, integer minor units in Dart — never floats
 - **CI:** GitHub Actions — validates the DB schema, runs Flutter analyze/test,
-  and builds web + APK
+  and builds Windows desktop (PC), Android APK, and web
 
 ## Repository layout
 
