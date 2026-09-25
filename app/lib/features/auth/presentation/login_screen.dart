@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../application/auth_controller.dart';
 
@@ -106,6 +107,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Text('Sign In'),
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      const SizedBox(height: 8),
+                      Text(
+                        'No account yet? The offline Invoice Tracker works without signing in.',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: () => context.go('/tracker'),
+                        icon: const Icon(Icons.request_quote_outlined),
+                        label: const Text('Open Invoice Tracker (Excel)'),
                       ),
                     ],
                   ),

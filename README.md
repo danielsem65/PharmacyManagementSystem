@@ -54,6 +54,18 @@ flutter run \
 Without `--dart-define`, the app uses placeholder credentials and login will
 fail — expected until a project is linked.
 
+## Offline Invoice Tracker (works without an account)
+
+An Excel-style invoice tracker is built into the app and needs **no login or
+Supabase**: it mirrors `Invoice_Tracker.xlsx` (auto tax, total, balance and
+status; paid / overdue / part-paid / open highlighting; summary block).
+
+- Open it from the login screen via **"Open Invoice Tracker (Excel)"**, or run
+  `flutter run -d windows` and browse to `/tracker`.
+- Data is saved locally on-device (Windows, Android, web) as JSON, so it is
+  fully offline — just like the spreadsheet.
+- Model/tests live in `app/lib/features/invoice_tracker/`.
+
 ## Database
 
 Migrations live in `supabase/migrations/`. Apply in order against a Supabase
