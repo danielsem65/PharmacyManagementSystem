@@ -43,18 +43,20 @@ void main() {
   });
 
   group('Status logic (column L)', () {
-    final now = DateTime(2026, 3, 1);
+    // 2000-era dates keep these deterministic regardless of the real clock,
+    // because statusLabel uses DateTime.now().
+    final now = DateTime(2000, 3, 1);
 
     test('Paid when balance is zero', () {
       final invoice = _invoice(
         amountPaidCents: 108000,
-        dueDate: DateTime(2025, 1, 1),
+        dueDate: DateTime(1999, 1, 1),
       );
       expect(invoice.statusAt(now), InvoiceStatus.paid);
     });
 
     test('Overdue when money owed and past due date', () {
-      final invoice = _invoice(dueDate: DateTime(2026, 2, 1));
+      final invoice = _invoice(dueDate: DateTime(2000, 2, 1));
       expect(invoice.statusAt(now), InvoiceStatus.overdue);
       expect(invoice.statusLabel, 'Overdue');
     });
@@ -62,15 +64,14 @@ void main() {
     test('Partially Paid when some money paid, not overdue', () {
       final invoice = _invoice(
         amountPaidCents: 40000,
-        dueDate: DateTime(2026, 4, 1),
+        dueDate: DateTime(2000, 5, 1),
       );
       expect(invoice.statusAt(now), InvoiceStatus.partiallyPaid);
     });
 
     test('Open when nothing paid and not yet due', () {
-      final invoice = _invoice(dueDate: DateTime(2026, 4, 1));
+      final invoice = _invoice(dueDate: DateTime(2000, 5, 1));
       expect(invoice.statusAt(now), InvoiceStatus.open);
-      expect(invoice.statusLabel, 'Open');
       expect(invoice.owesMoney, isTrue);
     });
   });

@@ -68,10 +68,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Total Invoiced'), findsOneWidget);
-    expect(find.text('158,000.00'), findsWidgets); // sum of totals
-    expect(find.text('8,000.00'), findsWidgets); // tax collected
-    expect(find.text('50,000.00'), findsWidgets); // total paid
-    expect(find.text('108,000.00'), findsWidgets); // outstanding
+    expect(find.text('1,580.00'), findsWidgets); // sum of totals (158000 cents)
+    expect(find.text('80.00'), findsWidgets); // tax collected (8000 cents)
+    expect(find.text('500.00'), findsWidgets); // total paid (50000 cents)
+    expect(find.text('1,080.00'), findsWidgets); // outstanding (108000 cents)
 
     expect(find.text('Invoices Logged'), findsOneWidget);
     expect(find.text('2'), findsWidgets);
@@ -122,7 +122,8 @@ void main() {
     await tester.pumpWidget(_harness(persistence));
     await tester.pumpAndSettle();
 
-    expect(find.text('Paid'), findsOneWidget);
+    // 'Paid' appears both as the column header and the invoice status cell.
+    expect(find.text('Paid'), findsNWidgets(2));
     expect(find.text('0.00'), findsWidgets); // balance
   });
 }

@@ -15,6 +15,8 @@ class InvoiceFormDialog extends StatefulWidget {
 }
 
 class _InvoiceFormDialogState extends State<InvoiceFormDialog> {
+  final _formKey = GlobalKey<FormState>();
+
   late final TextEditingController _number;
   late final TextEditingController _client;
   late final TextEditingController _description;
@@ -113,21 +115,26 @@ class _InvoiceFormDialogState extends State<InvoiceFormDialog> {
 
   static DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
-  String? _validateRequired(String? value) =>
-      (value == null || value.trim().isEmpty) ? 'Required' : null;
+String? _validateRequired(String? value) =>
+    (value == null || value.trim().isEmpty) ? 'Required' : null;
 
-  String? _validateMoney(String? value) =>
-      _parseMoney(value ?? '') == null ? 'Enter a valid amount (0 or more)' : null;
+String? _validateMoney(String? value) =>
+    _parseMoney(value ?? '') == null ? 'Enter a valid amount (0 or more)' : null;
 
-  String? _validateRate(String? value) =>
-      _parseRate(value ?? '') == null ? 'Enter a valid %' : null;
+String? _validateRate(String? value) =>
+    _parseRate(value ?? '') == null ? 'Enter a valid %' : null;
+
+String? _validateOptionalMoney(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    return _parseMoney(value) == null ? 'Enter a valid amount (0 or more)' : null;
+  }
 
   void _submit() {
-    final form = Form.of(context);
-    if (!(form.validate())) return;
+    if (_formKey.currentState?.validate() != true) return;
     final amount = _parseMoney(_amount.text)!;
     final taxRate = _parseRate(_taxRate.text)!;
-    final amountPaid = _parseMoney(_amountPaid.text)!;
+    final amountPaidText = _amountPaid.text.trim();
+    final amountPaid = amountPaidText.isEmpty ? 0 : _parseMoney(amountPaidText)!;
     final base = widget.initial ?? InvoiceEntry.create(
           invoiceNumber: '',
           client: '',
@@ -189,6 +196,7 @@ class _InvoiceFormDialogState extends State<InvoiceFormDialog> {
         width: 520,
         child: SingleChildScrollView(
           child: Form(
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -264,11 +272,12 @@ class _InvoiceFormDialogState extends State<InvoiceFormDialog> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        key: const Key('invoice_amount_paid'),
                         controller: _amountPaid,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
                         decoration: const InputDecoration(labelText: 'Amount Paid', hintText: '0'),
-                        validator: _validateMoney,
+                        validator: _validateOptionalMoney,
                       ),
                     ),
                     const SizedBox(width: 12),
