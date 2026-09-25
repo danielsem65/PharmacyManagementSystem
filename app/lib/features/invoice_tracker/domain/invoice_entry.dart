@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Mirrors the Invoice_Tracker.xlsx columns A-O and its live formulas.
 enum InvoiceStatus { open, partiallyPaid, overdue, paid }
 
@@ -19,7 +17,7 @@ class InvoiceEntry {
     this.notes = '',
   });
 
-  const InvoiceEntry.create({
+  InvoiceEntry.create({
     required this.invoiceNumber,
     required this.client,
     required this.description,

@@ -8,7 +8,7 @@ InvoiceEntry _invoice({
   int amountPaidCents = 0,
   DateTime? dueDate,
 }) {
-  const today = DateTime(2026, 1, 15);
+  final today = DateTime(2026, 1, 15);
   return InvoiceEntry(
     id: id,
     invoiceNumber: 'INV-001',
