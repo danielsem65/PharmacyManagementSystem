@@ -78,7 +78,8 @@ void main() {
 
     expect(find.text('INV-001'), findsOneWidget);
     expect(find.text('INV-002'), findsOneWidget);
-    expect(find.text('Overdue'), findsOneWidget);
+    // 'Overdue' appears twice: the stat card label and the status cell.
+    expect(find.text('Overdue'), findsNWidgets(2));
   });
 
   testWidgets('shows empty state then adds an invoice through the form', (tester) async {
